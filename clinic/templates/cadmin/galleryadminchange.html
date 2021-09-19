@@ -1,0 +1,107 @@
+{% extends 'admin/base.html' %}
+{% load static %}
+
+{% block extrastyle %}
+  <link href="{% static 'custom_admin/plugins/image-uploader.min.css'%}" rel="stylesheet">
+  <link href="{% static 'custom_admin/css/galleryadmin.css'%}" rel="stylesheet">
+{% endblock %}
+
+{% block extrahead %}
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+  <script src="{% static 'custom_admin/plugins/image-uploader.min.js'%}"></script>
+  <script src = "{% static 'custom_admin/js/galleryadmin.js'%}"></script>
+{% endblock %}
+
+{% block content %}
+<!-- Horizontal material form -->
+{% for g in gallery %}
+<div class="card">
+  <div class="card-body">
+    <div class = 'my-content'>
+        <form action = "{% url 'gallery_admin_change' g.id %}" method="POST" enctype="multipart/form-data" id = "gallery-form">
+          {% csrf_token %}
+          <!-- Grid row -->
+          <div class="form-group row">
+            <!-- Material input -->
+            <label for="title" class="col-sm-2 col-form-label">Title* : </label>
+            <div class="col-sm-10">
+              <div class="md-form mt-0">
+                <input type="text" class="form-control req-input" id="title" name = 'title' placeholder="Title for this gallery" maxlength="250" value = "{{g.title}}" required>
+                <div class = 'small-div'>
+                  <small class = 'helper'>This field cannot be empty .</small>
+                  <small class = 'helper'>Maximum length of the title can be 250 .</small>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Grid row -->
+        
+          <!-- Grid row -->
+          <div class="form-group row">
+            <!-- Material input -->
+            <label for="description" class="col-sm-2 col-form-label">Description : </label>
+            <div class="col-sm-10">
+              <div class="md-form mt-0">
+                <textarea style = 'padding : 10px' rows = '10' type="" class="form-control" name = 'description' id="description" placeholder="Description" value = "{{g.description}}">{{g.description}}</textarea>
+              </div>
+            </div>
+          </div>
+          <!-- Grid row -->
+      
+          <!-- Grid row -->
+          <div class="form-group row">
+              <!-- Material input -->
+              <label for="description" class="col-sm-2 col-form-label">Images : </label>
+              <div class="col-sm-10">
+                <div class="md-form mt-0">
+                  <div class="input-images" {% for p in pictures %} data-{{forloop.counter}} = "{{p.pictures.url}}" {% endfor %}></div>
+                </div>
+              </div>
+            </div>
+            <!-- Grid row -->
+          <input type = 'hidden' name = 'action' value = 'submit' id = 'action-input'>
+
+          <input type = 'hidden' name = 'preloaded' value = '' id = 'pre-images'>
+
+          <!-- Grid row -->
+          <div class="form-group row">
+            <div class="button-wrap">
+              <button type="submit" class="btn btn-primary" id = 'save-btn'>Save</button>
+              <button type="submit" class="btn btn-success" id = 'save-add-btn' >Save and add another</button>
+              <button type="submit" class="btn btn-info" id = 'save-continue-btn'>Save and continue Editing</button>
+              <button type="submit" class="btn btn-danger" id = 'delete-btn'>Delete</button>
+              
+            </div>
+          </div>
+          <!-- Grid row -->
+        </form>
+        <!-- Horizontal material form -->
+      </div>
+  </div>
+</div>    
+
+  <!-- Here is the modal for Are You Sure questions -->
+  <!-- Button trigger modal -->
+  <!-- Modal -->
+  <div class="modal fade" id="sureModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Image Remove</h5>
+          <button type="button" data-bs-dismiss="modal" aria-label="Close">
+          </button>
+        </div>
+        <div class="modal-body">
+          Are you sure you want to delete this image ?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="sure_delete()">Yes</button>
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="dont_delete">No</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  {% endfor %}
+{% endblock %}

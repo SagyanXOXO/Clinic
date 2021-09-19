@@ -1,0 +1,44 @@
+*
+{
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+label{
+    font-weight: 600;
+    color: rgb(117, 117, 117);
+    font-size: 14px;
+}
+
+input[type = 'text'], textarea{
+    font-weight: 500;
+    color: rgb(102, 102, 102);
+    font-size: 14px ;
+    border-color: rgb(192, 192, 192);
+    padding: 10px;
+}
+
+input[type = 'text']:focus, textarea:focus{
+    border-color: rgb(0, 89, 255);
+    border-width: 2px ;
+}
+
+.small-div{
+    display: none;
+    flex-direction: column;
+    margin: 3px;
+}
+
+small.helper{
+    font-weight: 500;
+    color: rgb(102, 102, 102);
+}
+
+small.error{
+    font-weight: 500;
+    color: rgb(255, 0, 0);
+}
+
+small.success{
+    font-weight: 500;
+    color: rgb(2, 226, 69);
+}

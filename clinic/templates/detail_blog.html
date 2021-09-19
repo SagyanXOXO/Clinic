@@ -1,0 +1,181 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block head-content %}
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link type ='text/css' rel = 'stylesheet' href = "{% static 'css/detail_blog.css' %}">
+{% endblock %}
+
+{% block extra_js %}
+<script src = "{% static 'js/detail_blog.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+<div class = 'main'>
+    <div class = 'main-content'>
+        <div class = 'content'>
+            <div class = 'blog-title'>
+                {{blog.title|title}}
+            </div>
+            <div class = 'blog-info'>
+                <div class = 'left-side'>
+                    <div>
+                        {{blog.author|title}}
+                    </div>
+                    <div>
+                        <i class="far fa-clock"></i>
+                        {{blog.publish_date}}
+                    </div>
+                </div>
+                <div class = 'right-side'>
+                    <i class="far fa-comments"></i> {{blog.views}} Comments
+                    <i class="far fa-eye"></i>{{blog.views}} Views
+                </div>
+            </div>
+            <div class = 'blog-content'>
+                {{blog.content|safe}}
+            </div>
+            <div class = 'share-div'>
+                <div class = 'left'>
+                    <i class="fas fa-heart fa-lg"></i>
+                    <i class="far fa-heart fa-lg"></i>
+                    <i class="far fa-comment fa-lg"></i>
+                    <p>3 likes</p>
+                    <p>14 comments</p>
+                </div>
+                <div class = 'right'>
+                    <a href = 'https://www.facebook.com/sharer/sharer.php?u=/blog/2#' class = 'fa fa-facebook'></a>
+                    <a href="#" class="fa fa-twitter"></a>
+                    <a href="#" class="fa fa-instagram"></a>
+                    <a href="#" class="fa fa-pinterest"></a>
+                    <a href="#" class="fa fa-tumblr"></a>
+                    <a href="#" class="fa fa-linkedin"></a>
+                </div>
+            </div>
+        </div>
+
+        <div class = 'comment-div'>
+            <p class = 'heading'>Comments</p>
+    
+            <div class = 'comment-thread root-comment has-child'>
+                <div class = 'comment-wrapper'>
+                    <img src = 'http://wpthemesgrid.com/themes/medikit/img/author1.jpg' class = 'commenter-pic'>
+                    <div class = 'comment-content'>
+                        <p class = 'commenter'>Jane Doe</p>
+                        <div class = 'comment-time'>
+                            <i class="far fa-calendar-alt"></i>
+                            <p>March 15, 2021</p>
+                        </div>
+                        <p class = 'main-comment'>
+                            This is my view.<br>
+                            This is my view.
+                            This is my view.<br>
+                            This is my view.<br>
+                        </p>
+                        <div class = 'comment-interaction'>
+                            <i class="fas fa-heart fa-lg"></i>
+                            <i class="far fa-heart fa-lg"></i>
+                            <i class="far fa-comment fa-lg"></i>
+                            <p>3h</p>
+                            <p>16 likes</p>
+                        </div>
+                    </div>
+                </div>
+    
+                    <div class = 'comment-thread has-child is-child'>
+                        <div class = 'comment-wrapper'>
+                            <img src = 'http://wpthemesgrid.com/themes/medikit/img/author1.jpg' class = 'commenter-pic'>
+                            <div class = 'comment-content'>
+                                <p class = 'commenter'>Jane Doe</p>
+                                <div class = 'comment-time'>
+                                    <i class="far fa-calendar-alt"></i>
+                                    <p>March 15, 2021</p>
+                                </div>
+                                <p class = 'main-comment'>
+                                    This is my view.<br>
+                                    This is my view.
+                                    This is my view.<br>
+                                    This is my view.<br>
+                                </p>
+                                <div class = 'comment-interaction'>
+                                    <i class="fas fa-heart fa-lg"></i>
+                                    <i class="far fa-heart fa-lg"></i>
+                                    <i class="far fa-comment fa-lg"></i>
+                                    <p>3h</p>
+                                    <p>16 likes</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+    
+            </div>
+        </div>
+    </div>
+
+    <div class = 'side-content'>
+        <div class = 'side-search'>
+            <form>
+                <div class="form-outline">
+                    <input type="text" id="searchform" class="form-control" />
+                    <label class="form-label" for="searchform">Search</label>
+                </div>
+                <button class = 'blog-search-btn'><i class="fas fa-search"></i></button>
+            </form>    
+        </div>
+
+        <div class = 'related-blogs'>
+            <p class = 'heading'>Related Blogs</p>
+            <div class = 'related-blogs-list' >
+                <img src = 'http://127.0.0.1:8000/media/uploadsCK/2021/09/11/pistol.png'>
+                <div class = 'related-blog-info'>
+                    <p class = 'related-blog-heading'>Things you need to understand before cursi</p>
+                    <div class = 'related-blog-extra-info'>
+                         <p><i class="fas fa-calendar-alt"></i>March 25th, 2021</p>
+                        <p><i class="fas fa-eye"></i>25</p>
+                    </div>
+                </div>
+            </div>
+            <div class = 'related-blogs-list' >
+                <img src = 'http://127.0.0.1:8000/media/uploadsCK/2021/09/11/pistol.png'>
+                <div class = 'related-blog-info'>
+                    <p class = 'related-blog-heading'>Things you need to understand before sss</p>
+                    <div class = 'related-blog-extra-info'>
+                         <p><i class="fas fa-calendar-alt"></i>March 25th, 2021</p>
+                        <p><i class="fas fa-eye"></i>25</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class = 'tags-div'>
+            <p class = heading>Tags</p>
+            <div class = 'tag-container'>
+                <div class= 'tag'>
+                    <i class="fas fa-tag"></i>
+                    <p>Doctor</p>
+                </div>
+                <div class= 'tag'>
+                    <i class="fas fa-tag"></i>
+                    <p>Archaeology</p>
+                </div>
+                <div class= 'tag'>
+                    <i class="fas fa-tag"></i>
+                    <p>Archaeology</p>
+                </div>
+                <div class= 'tag'>
+                    <i class="fas fa-tag"></i>
+                    <p>Archaeology</p>
+                </div>
+                <div class= 'tag'>
+                    <i class="fas fa-tag"></i>
+                    <p>Archaeology</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+{% endblock %}
