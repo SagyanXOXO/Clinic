@@ -5,9 +5,11 @@ from django.contrib.auth.decorators import login_required,user_passes_test
 from django.contrib.auth.models import User
 from django.utils.decorators import method_decorator
 from .models import Gallery, Pictures, Blog
+from Interaction.models import Comment, Like
 from django.contrib import messages
 from django.core.files import File
 import json
+from django.core.exceptions import ObjectDoesNotExist
 
 com = {
     "comments" : [
@@ -25,7 +27,7 @@ com = {
                     "id" : 4,
                     "name" : "John Cena 2",
                     "comment" : "Cant see me 2",
-                    "time" : "March 21st, 2021",
+                    "time" : "M",
                     "likes" : 12,
                     "reply_count" : 1,
                     "replies" : [
@@ -34,7 +36,7 @@ com = {
                                     "id" : 9,
                                     "name" : "John Cena 2 4",
                                     "comment" : "Cant see me 2 4",
-                                    "time" : "March 21st, 2021",
+                                    "time" : "M",
                                     "likes" : 21,
                                     "reply_count" : 0,
                                 }
@@ -45,7 +47,7 @@ com = {
                     "id" : 98,
                     "name" : "Brock lesnae",
                     "comment" : "fuck u",
-                    "time" : "March 21st, 2021",
+                    "time" : "M",
                     "likes" : 98,
                     "reply_count" : 0,
                     }
@@ -183,11 +185,63 @@ class BlogView(View):
 
 class DetailBlogView(View):
     def get(self,request,id):
+        current_user = request.user
         if request.is_ajax():
             return JsonResponse({'comments' : json.dumps(com)})
+
+        # Get blog total likes
+        total_likes = Like.objects.filter(blog = Blog.objects.get(id = id))
+        total_likes = len(total_likes)
+
+        # Get blog total comments    
+        total_comments = Comment.objects.filter(blog = Blog.objects.get(id = id))
+        total_comments = len(total_comments)
+
+        # Check if the current user has liked the blog or not
+        if current_user.is_authenticated:
+            has_liked = Like.objects.filter(blog = Blog.objects.get(id = id), user = current_user)
+            has_liked = len(has_liked)
+            print(has_liked)
+
+        # Construct nested comment json thread
         blog = Blog.objects.get(id = id)
-        context = {'blog' : blog}
-        return render(request, 'detail_blog.html',context)            
+        context = {'blog' : blog, 'total_likes' : total_likes, 'total_comments' : total_comments, 'has_liked' : has_liked}
+        return render(request, 'detail_blog.html',context)  
+
+    def post(self,request,id):
+        current_user = request.user
+        # Need to login to use any POST method
+        if current_user.is_authenticated:
+            # Determine course of action using the action and the action-id   
+            if request.is_ajax():
+                action = request.POST.get('action')
+                _id = request.POST.get('id')   
+                _parent = request.POST.get('parent')  
+                print(_parent)
+
+                if action.lower() == 'like':
+                    if _parent.lower() == 'blog':
+                        blog = Blog.objects.get(id = _id)
+                        try:
+                            like = Like.objects.get(blog = blog)
+                        except ObjectDoesNotExist:
+                            Like.objects.create(blog = blog, user = current_user).save()   
+                        else:
+                            like.delete() 
+                    if _parent.lower() == 'comment':
+                        pass                
+                elif action.lower() == 'comment':
+                    if _parent.lower() == 'blog':
+                        blog = Blog.objects.get(id = _id)
+                        Comment.objects.create(blog = blog, user = current_user)
+                    if _parent.lower() == 'comment':
+                        pass 
+            return JsonResponse({'data' : 'sd'})            
+
+
+
+        else:
+            print('Not logged in ...')            
 
 
 

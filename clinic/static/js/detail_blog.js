@@ -1,5 +1,6 @@
 var cd = $('.comment-div');
 
+// Dynamic nested comment constructor
 var comment_constructor = (data)=>{
     var main_classname = "comment-thread";
     if (data.parent_id == 0)
@@ -72,7 +73,6 @@ var comment_constructor = (data)=>{
 
 $.ajax({
     type : 'GET',
-    url : '/blog/2',
     data : 'comments',
     success : function(data)
     {
@@ -85,5 +85,57 @@ $.ajax({
 });
 
 $(document).ready(function(){
+    // Get the csrf token
+    var csrftoken = getCookie('csrftoken');
 
+    // handle JSON POST for likes and dislikes
+    $('.fa-heart').on('click', function(){
+        let heart =$(this);
+        $.ajax({
+            datatype : 'json',
+            method : 'POST',
+            data : {
+                action : $(this).attr('data-action'),
+                id : $(this).attr('data-action-id'),
+                parent : $(this).attr('data-parent'),
+                csrfmiddlewaretoken : csrftoken,
+            },
+            success : function(data)
+            {
+                heart.siblings('.heart-remove').removeClass('heart-remove');
+                heart.addClass('heart-remove');
+            }
+        });
+    });
+
+    // Handle Comment Post via AJAX
+    $('#comment-post').on('click',function(){
+        comment = $('#comment-textarea').val();
+    
+        $.ajax({
+            datatype : 'json',
+            method : 'POST',
+            data : {
+                action : _action,
+                id : _id,
+                parent : _parent,
+                comment : comment,
+                csrfmiddlewaretoken : csrftoken,
+            },
+            success : function(data)
+            {
+                //comment_constructor();
+                console.log('working');
+            }
+        });
+    });
+
+    // Show Comment Modal
+    $('.fa-comment').on('click',function(){
+        _action = $(this).attr('data-action');
+        _id = $(this).attr('data-action-id');
+        _parent = $(this).attr('data-parent');
+
+        $('#comment-modal').modal('show');
+    });
 });

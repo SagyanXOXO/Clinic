@@ -13,7 +13,7 @@
 .main-content{
     display: flex;
     flex-direction: column;
-    width: 75vw;
+    width: 73vw;
     border: 0px solid red;
 }
 
@@ -110,7 +110,6 @@
 }
 
 .share-div .left .fas{
-    display: none;
     margin-left: 10px;
     color: red;
 }
@@ -129,6 +128,10 @@
 
 .share-div .left .fa-comment:hover{
     color: var(--primary);
+}
+
+.heart-remove{
+    display: none;
 }
 
 
@@ -197,7 +200,7 @@ color: white;
     display: flex;
     flex-direction: column;
     margin-left: 50px;
-    width: 25vw;
+    width: 27vw;
 }
 
 .side-search{
@@ -256,21 +259,21 @@ color: white;
 .related-blogs{
     display: flex;
     flex-direction: column;
-    border-bottom: 1px solid var(--light-light-grey);
+    border: 1px solid var(--light-light-grey);
     background-color: white;
     box-shadow: 1px 1px 5px 5px rgb(243, 243, 243);
-    padding : 20px;
     border-radius: 7px;
+    width: 100%;
     margin-top: 30px;
-    max-width: 100%;
+    padding:10px
 }
 
-.related-blogs .heading {
-    width: fit-content;
+.related-blogs .heading{
     position: relative;
     color : var(--secondary);
     font-weight: 600;
     font-size: 18px;
+    width: fit-content;
 }
 
 .related-blogs .heading::before{
@@ -283,55 +286,78 @@ color: white;
     bottom: -5;
 }
 
-.related-blogs-list {
-    display: flex;
-    flex-direction: row;
-    height: 90px;
-    border-bottom: 1px solid var(--light-grey);
-    margin: 0;
-}
-
-.related-blogs-list img{
-    width: 100px;
-    height: 100px;
-    object-fit: scale-down;
-    border: 0px solid black;
-}
-
-.related-blog-info {
+.related-blogs-list{
     display: flex;
     flex-direction: column;
     border: 0px solid black;
-    width: 100%;
-    margin-top: 10px;
 }
 
-.related-blog-info .related-blog-heading{
-    color: black;
-    font-size: 15px;
-    font-weight: 500;
-    padding: 0;
-    margin: 0;
-}
-
-.related-blog-extra-info {
-    border: 0px solid green;
+.blog-item{
     display: flex;
     flex-direction: row;
-    padding-top: 5px;
-    color: var(--font-medium);
+    border-bottom: 1px solid var(--light-grey);
+    padding-top: 10px;
+    padding-bottom: 10px;
 }
 
-.related-blog-extra-info i{
+.blog-item img{
+    width: 80px;
+    height: 80px;
+    border: 0px solid black;
+}
+
+.related-blog-info{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    border: 0px solid rgb(121, 29, 29);
+    padding: 5px;
+}
+
+.related-blog-info p{
+    border: 0px solid black;
+    margin: 0;
+    padding: 0;
+    color: rgb(65, 65, 65);
+    font-weight: 500;
+    font-size: 15px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.related-blog-info p:hover{
+    color: var(--primary);
+}
+
+.extra-info{
+    display: flex;
+    flex-direction: row;
+    font-size: 13px;
+    border: 0px solid black;
+    margin-left: 5px;
+    margin-top: 5px;
+    color: rgb(90, 90, 90);
+    font-weight: 300;
+}
+
+.extra-info p{
+    color: rgb(133, 133, 133);
+    font-size: 14px;
+    font-weight: 400;
+}
+
+.extra-info .fa-calendar-alt{
+    margin-top: 4px;
     margin-right: 5px;
 }
 
-.related-blog-extra-info p .fa-eye{
+.extra-info .fa-eye{
+    margin-top: 5px;
+    margin-right: 5px;
     margin-left: 10px;
-}
-
-.related-blog-extra-info p{
-    font-size: 14px;
 }
 
 .tags-div{
@@ -549,6 +575,21 @@ color: white;
     margin-left: 11px;
 }
 
+.modal{
+    top: 20%;
+}
+
+.comment-textarea{
+    width: 100%;
+    min-height: 200px;
+    padding:10px;
+}
+
+.comment-modal-title{
+    color: black;
+    font-size: 20px;
+}
+
 .has-child{
     position: relative;
 }
@@ -613,4 +654,37 @@ color: white;
     .searchform{
         width: 100%;
     }
+
+    .related-blog-info p{
+        border: 0px solid black;
+        margin: 0;
+        padding: 0;
+        color: rgb(65, 65, 65);
+        font-weight: 500;
+        font-size: 15px;
+    }
+}
+
+@media screen and (max-width : 900px) {
+    .main{
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+}
+
+@media screen and (max-width : 550px) {
+    .main{
+        padding-left: 5px;
+        padding-right: 5px;
+    }
+    .share-div{
+        flex-direction: column;
+        height: 100%;
+        padding-bottom: 15px;
+    }
+
+    .comment-div{
+        padding:5px;
+    }
+
 }
