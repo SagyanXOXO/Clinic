@@ -20,8 +20,9 @@ com = {
         "comment" : "Cant see me",
         "time" : "3 hrs",
         "likes" : 0,
+        "has_liked" : 0,
         "reply_count" : 2,
-        "replies" : [
+        },
                     {
                     "parent_id" : 1,
                     "id" : 4,
@@ -29,8 +30,9 @@ com = {
                     "comment" : "Cant see me 2",
                     "time" : "M",
                     "likes" : 12,
+                    "has_liked" : 0,
                     "reply_count" : 1,
-                    "replies" : [
+                    },
                                 {
                                     "parent_id" : 4,
                                     "id" : 9,
@@ -38,10 +40,9 @@ com = {
                                     "comment" : "Cant see me 2 4",
                                     "time" : "M",
                                     "likes" : 21,
+                                    "has_liked" : 0,
                                     "reply_count" : 0,
-                                }
-                                ]
-                    },
+                                },
                     {
                     "parent_id" : 1,
                     "id" : 98,
@@ -49,10 +50,9 @@ com = {
                     "comment" : "fuck u",
                     "time" : "M",
                     "likes" : 98,
+                    "has_liked" : 0,
                     "reply_count" : 0,
-                    }
-                    ]
-        },
+                    },
         {
             "parent_id" : 0,
             "id" : 91,
@@ -60,10 +60,57 @@ com = {
             "comment" : "New Thread",
             "time" : "March 21st, 2021",
             "likes" : 98,
+            "has_liked" : 0,
             "reply_count" : 0,
         }
     ]
 }
+
+def get_client_ip(request):
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(',')[0]
+    else:
+        ip = request.META.get('REMOTE_ADDR')
+    return ip
+
+def comment_constructor(blog,user):
+    comments = {"comments" : []}
+
+    # Construct nested comment json thread
+    comment = Comment.objects.filter(blog = blog)
+    for c in comment:
+        comment_dict = {}
+
+        comment_dict.update({'id' : c.id, 'name' : c.user.username, 'comment' : c.content, 'time' : str(c.timestamp)})
+        if c.reply:
+            comment_dict.update({'parent_id' : c.reply.id})
+        else:
+            comment_dict.update({'parent_id' : 0})
+
+        # Get total likes    
+        likes_count = Like.objects.filter(comment = c)
+        comment_dict.update({"likes" : len(likes_count)}) 
+
+        # Check if the current user has liked this particular comment
+        if user.is_authenticated:
+            has_liked = Like.objects.filter(comment = c, user = user)
+        else:
+            has_liked = 0    
+        if has_liked:
+            comment_dict.update({'has_liked' : 1})
+        else:
+            comment_dict.update({'has_liked' : 0})    
+
+        # Get total replies
+        replies = Comment.objects.filter(reply = c)
+
+
+        comments['comments'].append(comment_dict)
+
+    #print(comments)    
+    return comments   
+
 
 
 # These are the models for the admin
@@ -187,7 +234,19 @@ class DetailBlogView(View):
     def get(self,request,id):
         current_user = request.user
         if request.is_ajax():
-            return JsonResponse({'comments' : json.dumps(com)})
+            comments = comment_constructor(Blog.objects.get(id = id), current_user)
+            return JsonResponse({'comments' : json.dumps(comments)})
+
+        for key, value in request.session.items():
+            print('{} => {}'.format(key, value))    
+
+        # Increment the view
+        if 'has_viewed' not in request.session:
+            blog = Blog.objects.get(id = id)
+            blog.views = blog.views + 1    
+            blog.save()
+
+            request.session['has_viewed'] = True
 
         # Get blog total likes
         total_likes = Like.objects.filter(blog = Blog.objects.get(id = id))
@@ -201,9 +260,9 @@ class DetailBlogView(View):
         if current_user.is_authenticated:
             has_liked = Like.objects.filter(blog = Blog.objects.get(id = id), user = current_user)
             has_liked = len(has_liked)
-            print(has_liked)
+        else:
+            has_liked = 0    
 
-        # Construct nested comment json thread
         blog = Blog.objects.get(id = id)
         context = {'blog' : blog, 'total_likes' : total_likes, 'total_comments' : total_comments, 'has_liked' : has_liked}
         return render(request, 'detail_blog.html',context)  
@@ -217,31 +276,98 @@ class DetailBlogView(View):
                 action = request.POST.get('action')
                 _id = request.POST.get('id')   
                 _parent = request.POST.get('parent')  
-                print(_parent)
+                _content = request.POST.get('comment')
+                #print(_content)
 
                 if action.lower() == 'like':
                     if _parent.lower() == 'blog':
-                        blog = Blog.objects.get(id = _id)
                         try:
-                            like = Like.objects.get(blog = blog)
+                            blog = Blog.objects.get(id = _id)
+
                         except ObjectDoesNotExist:
-                            Like.objects.create(blog = blog, user = current_user).save()   
+                            print('Blog does not exist')
+
+                        else:        
+                            like = Like.objects.filter(blog = blog)
+                            if not like:
+                                try:
+                                    Like.objects.create(blog = blog, user = current_user).save()
+                                except:    
+                                    return JsonResponse({'message' : 'Something went wrong.'})  
+                                else:
+                                    return JsonResponse({'message' : 'You have liked this post.'})      
+                            else:
+                                try:
+                                    like.delete()
+                                except:
+                                    return JsonResponse({'message' : 'Something went wrong.'}) 
+                                else:
+                                    return JsonResponse({'message' : 'You have unliked this post.'})          
+                    elif _parent.lower() == 'comment':
+                        try:
+                            comment = Comment.objects.get(id = _id)
+                        except ObjectDoesNotExist:
+                            print('Comment does not exist')    
                         else:
-                            like.delete() 
-                    if _parent.lower() == 'comment':
-                        pass                
+                            like = Like.objects.filter(comment = comment)
+                            if not like:
+                                try:
+                                    Like.objects.create(comment = comment, user = current_user).save()
+                                except:
+                                    return JsonResponse({'message' : 'Something went wrong.'})
+                                else:
+                                    return JsonResponse({'message' : 'You have liked this comment'}) 
+                            else:
+                                try:
+                                    like.delete()
+                                except:
+                                    return JsonResponse({'message' : 'Something went wrong'})
+                                else:
+                                    return JsonResponse({'message' : 'You have unliekd this comment'})                           
+                           
+
                 elif action.lower() == 'comment':
                     if _parent.lower() == 'blog':
-                        blog = Blog.objects.get(id = _id)
-                        Comment.objects.create(blog = blog, user = current_user)
-                    if _parent.lower() == 'comment':
-                        pass 
-            return JsonResponse({'data' : 'sd'})            
+                        try:
+                            blog = Blog.objects.get(id = _id)
+
+                        except ObjectDoesNotExist:  
+                            pass
+
+                        else:      
+                            try:
+                                Comment.objects.create(blog = blog, user = current_user, content = _content).save()
+
+                            except:
+                                return JsonResponse({'message' : 'Something went wrong.'})
+
+                            else:        
+                                return JsonResponse({'message' : 'Your comment has been posted.'})
+
+                    elif _parent.lower() == 'comment':
+                        try:
+                            comment = Comment.objects.get(id = _id)
+
+                        except ObjectDoesNotExist:
+                            pass
+
+                        else:
+                            try:
+                                Comment.objects.create(blog = comment.blog, reply = comment, user = current_user, content = _content).save()
+
+                            except:
+                                return JsonResponse({'message' : 'Something went wrong'})  
+
+                            else:
+                                return JsonResponse({'message' : 'Your comment has been posted'})   
+
+            return JsonResponse({'success' : 'true'})            
 
 
 
         else:
-            print('Not logged in ...')            
+            print('Not logged in ...')
+            return JsonResponse({'message' : 'User not logged in'})            
 
 
 

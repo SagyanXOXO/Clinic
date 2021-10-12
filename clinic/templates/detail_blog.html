@@ -30,7 +30,7 @@
                     </div>
                 </div>
                 <div class = 'right-side'>
-                    <i class="far fa-comments"></i> {{blog.views}} Comments
+                    <i class="far fa-comments"></i> {{total_comments}} Comments
                     <i class="far fa-eye"></i>{{blog.views}} Views
                 </div>
             </div>
@@ -42,8 +42,8 @@
                     <i class="fas fa-heart fa-lg {% if has_liked == 1 %}{% else %} heart-remove {% endif %}" data-action = 'Like' data-parent = 'Blog' data-action-id = '{{blog.id}}'></i>
                     <i class="far fa-heart fa-lg {% if has_liked == 1 %} heart-remove {% endif %}" data-action = 'Like' data-parent = 'Blog' data-action-id = '{{blog.id}}'></i>
                     <i class="far fa-comment fa-lg" data-action = 'Comment' data-parent = 'Blog' data-parent = 'Comment' data-action-id = '{{blog.id}}'></i>
-                    <p>3 likes</p>
-                    <p>14 comments</p>
+                    <p>{{total_likes}} likes</p>
+                    <p>{{total_comments}} comments</p>
                 </div>
                 <div class = 'right'>
                     <a href = 'https://www.facebook.com/sharer/sharer.php?u=/blog/2#' class = 'fa fa-facebook'></a>
@@ -205,4 +205,5 @@
     </div>
   </div>
 </div>
+
 {% endblock %}

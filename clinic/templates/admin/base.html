@@ -39,7 +39,7 @@
 </script>
 <!-- MDB -->
 <script type="text/javascript" src="{% url 'jet:jsi18n' %}"></script>
-<script src="{% static "jet/js/build/bundle.min.js" as url %}{{ url|jet_append_version }}"></script>
+<script src="{% static 'jet/js/build/bundle.min.js' as url %}{{ url|jet_append_version }}"></script>
 <script src="{% static 'custom_admin/plugins/slimselect.min.js' %}"></script>
 <!-- MDB -->
 
@@ -47,6 +47,9 @@
 {% for url in translation_urls %}
     <script src="{% static url as url %}{{ url|jet_append_version }}"></script>
 {% endfor %}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="{% static 'custom_admin/js/admin_base.js' %}"></script>
 
 <!-----------------------------------------------MDB JS ----------------------------------------->
 
@@ -72,6 +75,35 @@
         </div>
     </div>
     <!-- END Header -->
+
+    <div class = 'top-navbar'>
+        <div class = 'right'>
+            <div class = 'icon-badge'>
+                <i class="far fa-bell notification-icon"><p class = 'badge'>9+</p></i>
+                <div class = 'my-dropdown notification-dropdown'>
+                    <div class = 'my-dropdown-header'>
+                        <p>Notifications</p>
+                    </div>
+                    <div class = 'my-dropdown-list'>
+                        <div class = 'my-dropdown-item'>
+                            <img src = 'http://wpthemesgrid.com/themes/medikit/img/author1.jpg'>
+                            <div class = 'right-side'>
+                                <p class = 'content'>A new user just liked your blog post on Things You Need To Know</p>
+                                <p class = 'time'>3 Hours Ago</p>
+                            </div>
+                        </div>
+                        <div class = 'my-dropdown-item'>
+                            <img src = 'http://wpthemesgrid.com/themes/medikit/img/author1.jpg'>
+                            <div class = 'right-side'>
+                                <p class = 'content'>A new user just liked your blog post on Things You Need To Know</p>
+                                <p class = 'time'>3 Hours Ago</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     {% block breadcrumbs %}
     <div class="breadcrumbs">

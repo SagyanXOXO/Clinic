@@ -16,6 +16,7 @@ import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+STATIC_ROOT = '/static/'
 STATIC_URL = '/static/'
 
 # Add these new lines
@@ -31,12 +32,13 @@ MEDIA_ROOT = os.path.join(BASE_DIR,'media/')
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-cb))9l3mv(ax7un4prtz_%e+pod0t#r0p(ayc&gup2%iez42f!'
-
+#SECRET_KEY = 'django-insecure-cb))9l3mv(ax7un4prtz_%e+pod0t#r0p(ayc&gup2%iez42f!'
+SECRET_KEY = os.getenv('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+#DEBUG = True
+DEBUG = os.getenv('DEBUG')
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -49,6 +51,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'channels',
     'ckeditor',
     'ckeditor_uploader',
     'Personnel',
@@ -89,6 +92,16 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'clinic.wsgi.application'
+ASGI_APPLICATION = 'clinic.asgi.application'
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("127.0.0.1", 6379)],
+        },
+    },
+}
 
 
 # Database
@@ -193,4 +206,5 @@ CKEDITOR_CONFIGS = {
         'width' : '100%',
     },
 }
+
 
