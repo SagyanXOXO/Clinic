@@ -32,11 +32,11 @@ MEDIA_ROOT = os.path.join(BASE_DIR,'media/')
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-#SECRET_KEY = 'django-insecure-cb))9l3mv(ax7un4prtz_%e+pod0t#r0p(ayc&gup2%iez42f!'
-SECRET_KEY = os.getenv('SECRET_KEY')
+SECRET_KEY = 'django-insecure-cb))9l3mv(ax7un4prtz_%e+pod0t#r0p(ayc&gup2%iez42f!'
+#SECRET_KEY = os.getenv('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
-#DEBUG = True
-DEBUG = os.getenv('DEBUG')
+DEBUG = True
+#DEBUG = os.getenv('DEBUG')
 
 ALLOWED_HOSTS = ['*']
 
@@ -98,7 +98,7 @@ CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": [("127.0.0.1", 6379)],
+            "hosts": [('redis', 6379)],
         },
     },
 }
@@ -120,11 +120,11 @@ DATABASES = {
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'clinicdb', 
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME' : 'clinicdb',
         'USER': 'postgres', 
         'PASSWORD': 'aquazinc',
-        'HOST': '127.0.0.1', 
+        'HOST': 'db', 
         'PORT': '5432',
     }
 }

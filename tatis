@@ -1,0 +1,38 @@
+[33mcommit 6f1547bac29785c3894a0d7cb69d617d15c2c928[m[33m ([m[1;36mHEAD -> [m[1;32mmaster[m[33m, [m[1;31morigin/master[m[33m)[m
+Author: Sagyan <workonsagyan@gmail.com>
+Date:   Tue Oct 12 18:03:04 2021 +0545
+
+    Dockerizing
+
+[33mcommit a6d1cb694e703c0c9a5d12665752c269e06d6f8d[m
+Author: Sagyan <workonsagyan@gmail.com>
+Date:   Tue Sep 28 21:17:10 2021 +0545
+
+    Upgraded sqlparse to version sqlparse 0.4.2 or greater in requirements.txt
+
+[33mcommit 35562dce1b3995026183fbf0b31b5469834e5a8d[m
+Merge: 607c21a b41c331
+Author: Sagyan Singh <workonsagyan@gmail.com>
+Date:   Tue Sep 28 20:06:46 2021 +0545
+
+    Merge pull request #1 from SagyanXOXO/docker
+    
+    Added DockerFile
+
+[33mcommit b41c331fee571596d06ec83e2b90109a2e6213c8[m[33m ([m[1;31morigin/docker[m[33m)[m
+Author: Sagyan <workonsagyan@gmail.com>
+Date:   Tue Sep 28 20:01:57 2021 +0545
+
+    Added DockerFIle
+
+[33mcommit 607c21a0f1e8564896e728a69742a5e504ce4e4b[m
+Author: Sagyan <workonsagyan@gmail.com>
+Date:   Mon Sep 27 14:13:49 2021 +0545
+
+    Completed view for liking
+
+[33mcommit 99f9e7cebc75ddc336fc70c553d1e8165cd2fe42[m
+Author: Sagyan <workonsagyan@gmail.com>
+Date:   Sun Sep 19 12:46:20 2021 +0545
+
+    First Commit
