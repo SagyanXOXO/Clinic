@@ -18,14 +18,17 @@ from django.urls import path, include
 from django.conf.urls.static import static
 from django.conf import settings
 from filebrowser.sites import site
+from .views import AdminLoginView
 
 urlpatterns = [
+    # Admin view
+    path('admin/login/', AdminLoginView.as_view(), name = 'admin_login'),
     path('admin/',admin.site.urls),
     path('jet/', include('jet.urls', 'jet')),
     path('ckeditor/', include('ckeditor_uploader.urls')),
     path('custom_admin/', include('Personnel.urls')),
     path('', include('Misc.urls')),
-    path('', include('Interaction.urls'))
+    path('', include('Interaction.urls')),
     
 ]
 

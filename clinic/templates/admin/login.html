@@ -1,0 +1,48 @@
+{% load static %}
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <!-- Font Awesome -->
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" rel="stylesheet"/>
+        <!-- Google Fonts -->
+        <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet"/>
+        <!-- MDB -->
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.6.0/mdb.min.css" rel="stylesheet"/>
+        <link href = "{% static 'admin/css/login.css'%}" rel = 'stylesheet'>
+    </head>
+
+    <body>
+        <div class = 'login-div'>
+            <img src = 'https://upload.wikimedia.org/wikipedia/commons/3/33/Vanamo_Logo.png' class = 'login-logo'>
+            <h2>Sign In</h2>
+            <form action = '.' method = 'post' id = 'login-form'>
+                {% csrf_token %}
+                <div class="form-outline login-input">
+                    <input type="text" id="email-username-input" class="form-control form-control-lg" name = 'email_username' required/>
+                    <label class="form-label" for="email-username-input">Email or Username</label>
+                </div>
+                <div class="form-outline login-input">
+                    <input type="password" id="password-input" class="form-control form-control-lg" name = 'password' required/>
+                    <label class="form-label" for="password-input">Password</label>
+                </div>
+                <button class="btn btn-primary" id = 'login-btn' type = 'submit' value = 'submit' form = 'login-form'>Sign in</button>
+                <div class = 'login-bottom'>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="remember_check" name = 'remember_check'/>
+                        <label class="form-check-label" for="flexCheckDefault">Remember Me</label>
+                    </div>
+                </div>
+            </form>    
+        </div>
+        {% if message %}
+        <div class="alert alert-danger" role="alert">
+            {{message}}
+          </div>
+        {% endif %}  
+    </body>
+
+    <!-- MDB -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.6.0/mdb.min.js"></script>
+</html>    

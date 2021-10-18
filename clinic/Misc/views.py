@@ -10,6 +10,7 @@ from django.contrib import messages
 from django.core.files import File
 import json
 from django.core.exceptions import ObjectDoesNotExist
+from django.utils.formats import date_format
 
 com = {
     "comments" : [
@@ -66,6 +67,7 @@ com = {
     ]
 }
 
+
 def get_client_ip(request):
     x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
     if x_forwarded_for:
@@ -81,12 +83,20 @@ def comment_constructor(blog,user):
     comment = Comment.objects.filter(blog = blog)
     for c in comment:
         comment_dict = {}
-
-        comment_dict.update({'id' : c.id, 'name' : c.user.username, 'comment' : c.content, 'time' : str(c.timestamp)})
+        time = date_format(c.timestamp, format='SHORT_DATETIME_FORMAT')
+        comment_dict.update({'id' : c.id, 'name' : (str(c.user.first_name) + ' ' + str(c.user.last_name)), 'comment' : c.content, 'time' : str(time)})
         if c.reply:
             comment_dict.update({'parent_id' : c.reply.id})
         else:
             comment_dict.update({'parent_id' : 0})
+
+        # Check if the comment is by the current user itself
+        if c.user == user:
+            comment_dict.update({'isUserComment' : 1})
+
+        else:
+            comment_dict.update({'isUserComment' : 0})    
+
 
         # Get total likes    
         likes_count = Like.objects.filter(comment = c)
@@ -104,11 +114,13 @@ def comment_constructor(blog,user):
 
         # Get total replies
         replies = Comment.objects.filter(reply = c)
+        if not replies:
+           comment_dict.update({'has_reply' : 0}) 
+        else:
+            comment_dict.update({'has_reply' : len(replies)})    
 
 
-        comments['comments'].append(comment_dict)
-
-    #print(comments)    
+        comments['comments'].append(comment_dict)  
     return comments   
 
 
@@ -234,8 +246,22 @@ class DetailBlogView(View):
     def get(self,request,id):
         current_user = request.user
         if request.is_ajax():
-            comments = comment_constructor(Blog.objects.get(id = id), current_user)
-            return JsonResponse({'comments' : json.dumps(comments)})
+            action = request.GET.get('action')
+            if action == 'get_comments':
+                comments = comment_constructor(Blog.objects.get(id = id), current_user)
+                return JsonResponse({'comments' : json.dumps(comments)})
+
+            elif action == 'get_blog_info':
+                # Get blog total likes
+                total_likes = Like.objects.filter(blog = Blog.objects.get(id = id))
+                total_likes = len(total_likes)
+
+                # Get blog total comments    
+                total_comments = Comment.objects.filter(blog = Blog.objects.get(id = id))
+                total_comments = len(total_comments) 
+
+                print(total_likes, total_comments, 'sadfasdfasdf')
+                return JsonResponse({'total_likes' : total_likes, 'total_comments' : total_comments})  
 
         for key, value in request.session.items():
             print('{} => {}'.format(key, value))    
@@ -264,6 +290,7 @@ class DetailBlogView(View):
             has_liked = 0    
 
         blog = Blog.objects.get(id = id)
+        
         context = {'blog' : blog, 'total_likes' : total_likes, 'total_comments' : total_comments, 'has_liked' : has_liked}
         return render(request, 'detail_blog.html',context)  
 
@@ -316,14 +343,14 @@ class DetailBlogView(View):
                                 except:
                                     return JsonResponse({'message' : 'Something went wrong.'})
                                 else:
-                                    return JsonResponse({'message' : 'You have liked this comment'}) 
+                                    return JsonResponse({'message' : 'You liked this comment.'}) 
                             else:
                                 try:
                                     like.delete()
                                 except:
                                     return JsonResponse({'message' : 'Something went wrong'})
                                 else:
-                                    return JsonResponse({'message' : 'You have unliekd this comment'})                           
+                                    return JsonResponse({'message' : 'You unliked this comment.'})                           
                            
 
                 elif action.lower() == 'comment':
@@ -356,10 +383,31 @@ class DetailBlogView(View):
                                 Comment.objects.create(blog = comment.blog, reply = comment, user = current_user, content = _content).save()
 
                             except:
-                                return JsonResponse({'message' : 'Something went wrong'})  
+                                return JsonResponse({'message' : 'Something went wrong.'})  
 
                             else:
-                                return JsonResponse({'message' : 'Your comment has been posted'})   
+                                return JsonResponse({'message' : 'Your comment has been posted.'})   
+
+                elif action.lower() == 'edit-comment':
+                    try:
+                        comment = Comment.objects.get(id = _id, user = current_user)
+                    except ObjectDoesNotExist:
+                        return JsonResponse({'message' : 'Something went wrong.'}) 
+
+                    else:
+                        comment.content = _content
+                        comment.save()
+                        return JsonResponse({'message' : 'Comment successfully edited.'})  
+
+                elif action.lower() == 'delete-comment':
+                    try:
+                        comment = Comment.objects.get(id = _id, user = current_user)
+                    except ObjectDoesNotExist:
+                        return JsonResponse({'message' : 'Something went wrong.'}) 
+
+                    else:
+                        comment.delete()
+                        return JsonResponse({'message' : 'Comment successfully deleted.'})         
 
             return JsonResponse({'success' : 'true'})            
 
@@ -367,7 +415,7 @@ class DetailBlogView(View):
 
         else:
             print('Not logged in ...')
-            return JsonResponse({'message' : 'User not logged in'})            
+            return JsonResponse({'message' : 'User is not logged in.'})            
 
 
 

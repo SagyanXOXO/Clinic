@@ -58,6 +58,27 @@
     color: var(--dark-blue);
 }
 
+.right-side{
+    display: flex;
+    flex-direction: row;
+    margin-top: 10px;
+    font-size: 17px;
+}
+
+.right-side i{
+    display: flex;
+    flex-direction: row;
+    margin-right: 13px;
+}
+
+.right-side .fa-comments{
+    margin-top: 2px;
+}
+
+.right-side i p{
+    margin-left: 7px;
+}
+
 .right-side .fa-comments, .right-side .fa-eye{
     color: var(--dark-blue);
 }
@@ -584,6 +605,12 @@ color: white;
     padding:10px;
 }
 
+.edit-comment-textarea{
+    width: 100%;
+    min-height: 200px;
+    padding:10px;
+}
+
 .comment-modal-title{
     color: black;
     font-size: 20px;
@@ -618,6 +645,16 @@ color: white;
     height:  calc(100% - 75px);
     top:75px;
     left: 40px;
+}
+
+.edit-comment{
+    color: rgb(38, 177, 26);
+    cursor: hand;
+}
+
+.delete-comment{
+    color:rgb(194, 0, 0);
+    cursor: hand;
 }
 
 @media screen and (max-width : 1500px) {
